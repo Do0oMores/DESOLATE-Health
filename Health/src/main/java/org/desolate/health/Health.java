@@ -1,6 +1,7 @@
 package org.desolate.health;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,11 +31,25 @@ public final class Health extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        player.setMaxHealth(60);// 设置最大血量为60
+        double health=config.getDouble("最大玩家血量");
+        //重置超出阈值的玩家血量
+        if (player.getHealth()>health){
+            player.setHealth(health);
+            player.sendMessage(ChatColor.RED+"你的血量已超出阈值，现已重置");
+        }
+        if (config.contains("最大玩家血量")){
+            if (health>0.0){
+                player.setMaxHealth(health);
+            }else {
+                config.set("最大玩家血量",60.0);
+                player.setMaxHealth(60);// 设置最大血量为60
+                player.sendMessage(ChatColor.RED+"血量需为正数，已将血量重置为60");
+            }
+        }
         // 从配置文件读取玩家血量
         if (config.contains(player.getUniqueId().toString())) {
-            double health = config.getDouble(player.getUniqueId().toString());
-            player.setHealth(health);
+            double NowHealth = config.getDouble(player.getUniqueId().toString());
+            player.setHealth(NowHealth);
         }
     }
 
