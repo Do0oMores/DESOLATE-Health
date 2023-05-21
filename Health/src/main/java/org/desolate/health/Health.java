@@ -68,14 +68,14 @@ public final class Health extends JavaPlugin implements Listener {
         config = getConfig();
         for (Player player:Bukkit.getOnlinePlayers()){
             if (!config.contains(player.getUniqueId().toString())){
-                config.set(player.getUniqueId().toString(),player.getMaxHealth());
+                config.set(player.getUniqueId().toString(),player.getHealth());
             }
         }
     }
 
     private void savePlayerHealth() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            config.set(player.getUniqueId().toString(), player.getMaxHealth());
+            config.set(player.getUniqueId().toString(), player.getHealth());
         }
         try {
             config.save(new File(getDataFolder(), "config.yml"));
