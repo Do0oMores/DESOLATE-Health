@@ -23,7 +23,7 @@ jobs:
       - name: Build with Maven
         run: |
           mvn -B package --file Health/pom.xml -DskipTests
-          rename Health/target/Health-1.0-SNAPSHOT.jar Health/target/DESOLATE-Health.jar Health/target/Health-1.0-SNAPSHOT.jar
+          mv -i Health/target/Health-1.0-SNAPSHOT.jar Health/target/DESOLATE-Health.jar
           zip Health/target/DESOLATE-Health.zip Health/target/DESOLATE-Health.jar
       - name: Create Release
         id: create_release
