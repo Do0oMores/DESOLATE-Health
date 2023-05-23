@@ -18,7 +18,7 @@ public final class Health extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        getServer().getPluginManager().registerEvents(this,this);
+        getServer().getPluginManager().registerEvents(this, this);
         loadConfig();
         getLogger().info("DESOLATE-Health has been enabled!");
     }
@@ -31,19 +31,19 @@ public final class Health extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        double health=config.getDouble("最大玩家血量");
+        double health = config.getDouble("最大玩家血量");
 //重置超出阈值的玩家血量 (更正--重复判断)
 //        if (player.getHealth()>health){
 //            player.setHealth(health);
 //            player.sendMessage(ChatColor.RED+"你的血量已超出阈值，现已重置");
 //        }
-        if (config.contains("最大玩家血量")){
-            if (health>0.0){
+        if (config.contains("最大玩家血量")) {
+            if (health > 0.0) {
                 player.setMaxHealth(health);
-            }else {
-                config.set("最大玩家血量",60.0);
+            } else {
+                config.set("最大玩家血量", 60.0);
                 player.setMaxHealth(60);// 设置最大血量为60
-                player.sendMessage(ChatColor.RED+"血量需为正数，已将血量重置为60");
+                player.sendMessage(ChatColor.RED + "血量需为正数，已将血量重置为60");
             }
         }
         // 从配置文件读取玩家血量
@@ -54,7 +54,7 @@ public final class Health extends JavaPlugin implements Listener {
             if (NowHealth > health) {
                 player.setHealth(health);
                 //重置超出阈值的玩家血量
-                player.sendMessage(ChatColor.RED+"你的血量已超出阈值，现已重置");
+                player.sendMessage(ChatColor.RED + "你的血量已超出阈值，现已重置");
             } else
                 player.setHealth(NowHealth);
         }
@@ -73,9 +73,9 @@ public final class Health extends JavaPlugin implements Listener {
             saveResource("config.yml", false);
         }
         config = getConfig();
-        for (Player player:Bukkit.getOnlinePlayers()){
-            if (!config.contains(player.getUniqueId().toString())){
-                config.set(player.getUniqueId().toString(),player.getHealth());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!config.contains(player.getUniqueId().toString())) {
+                config.set(player.getUniqueId().toString(), player.getHealth());
             }
         }
     }
@@ -91,4 +91,3 @@ public final class Health extends JavaPlugin implements Listener {
         }
     }
 }
-
