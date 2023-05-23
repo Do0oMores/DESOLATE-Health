@@ -11,7 +11,7 @@ jobs:
 
     steps:
     - name: Checkout source
-    - uses: actions/checkout@v3
+      uses: actions/checkout@v3
     - name: Set up JDK 11
       uses: actions/setup-java@v3
       with:
@@ -21,8 +21,24 @@ jobs:
     - name: Build with Maven
       run: |
         mvn -B package --file Health/pom.xml
-        zip target/DESOLATE-Health.zip target/DESOLATE-Health.jar
-    - name: Release
-      uses: softprops/action-gh-release@v1
+        zip DESOLATE-Health.zip DESOLATE-Health.jar
+    - name: Create Release
+      run: |
+        id: create_release
+        uses: monkeyWie/create-release@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+    - name: Upload Release zip package
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        files: target/DESOLATE-Health.zip
+        upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+        asset_path: ./DESOLATE-Health.zip
+        asset_name: DESOLATE-Health-${{ steps.create_release.outputs.tag }}.zip
+        asset_content_type: application/zip
