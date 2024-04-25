@@ -1,0 +1,5 @@
+name: Health
+version: '1.0.1'
+main: org.desolate.health.Health
+api-version: 1.16
+author: Mores
