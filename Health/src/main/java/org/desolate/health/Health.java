@@ -11,9 +11,14 @@ import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public final class Health extends JavaPlugin implements Listener {
     private FileConfiguration config;
@@ -23,6 +28,8 @@ public final class Health extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         loadConfig();
         getLogger().info("DESOLATE-Health has been enabled!");
+        Timer timer=new Timer();
+        timer.schedule(loadHealthTask(),2000L,10000L);
     }
 
     @Override
@@ -122,4 +129,19 @@ public final class Health extends JavaPlugin implements Listener {
         }
     }
 
+    public TimerTask loadHealthTask() {
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                Collection<? extends Player> onlinePlayer = getServer().getOnlinePlayers();
+                for (Player player : onlinePlayer) {
+                    double health = player.getHealth();
+                    config.set(player.getUniqueId().toString(), health);
+                    PotionEffect heal = new PotionEffect(PotionEffectType.REGENERATION, 100, 2, false, false);
+                    player.addPotionEffect(heal);
+                }
+            }
+        };
+        return task;
+    }
 }
