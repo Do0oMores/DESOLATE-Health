@@ -1,5 +1,9 @@
 name: Health
-version: '1.1.0'
+version: '1.1.1'
 main: org.desolate.health.Health
 api-version: 1.16
 author: Mores
+commands:
+  sethealth:
+    description: "手动设置玩家的最大血量"
+    usage: /sethealth

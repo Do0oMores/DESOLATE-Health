@@ -13,15 +13,17 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public final class Health extends JavaPlugin implements Listener {
-    private FileConfiguration config;
+    public static FileConfiguration config;
 
     @Override
     public void onEnable() {
@@ -30,6 +32,8 @@ public final class Health extends JavaPlugin implements Listener {
         getLogger().info("DESOLATE-Health has been enabled!");
         Timer timer=new Timer();
         timer.schedule(loadHealthTask(),2000L,10000L);
+        //注册命令
+        Objects.requireNonNull(this.getCommand("sethealth")).setExecutor(new HealthCommand());
     }
 
     @Override
@@ -50,9 +54,9 @@ public final class Health extends JavaPlugin implements Listener {
             if (health > 0.0) {
                 player.setMaxHealth(health);
             } else {
-                config.set("最大玩家血量", 60.0);
-                player.setMaxHealth(60);// 设置最大血量为60
-                player.sendMessage(ChatColor.RED + "血量需为正数，已将血量重置为60");
+                config.set("最大玩家血量", 100.0);
+                player.setMaxHealth(100);// 设置最大血量为60
+                player.sendMessage(ChatColor.RED + "血量需为正数，已将血量重置为100");
             }
         }
         // 从配置文件读取玩家血量
@@ -110,9 +114,9 @@ public final class Health extends JavaPlugin implements Listener {
             if (health > 0.0) {
                 player.setMaxHealth(health);
             } else {
-                config.set("最大玩家血量", 60.0);
-                player.setMaxHealth(60);// 设置最大血量为60
-                player.sendMessage(ChatColor.RED + "血量需为正数，已将血量重置为60");
+                config.set("最大玩家血量", 100.0);
+                player.setMaxHealth(100);// 设置最大血量为100
+                player.sendMessage(ChatColor.RED + "血量需为正数，已将血量重置为100");
             }
         }
         // 从配置文件读取玩家血量
@@ -127,6 +131,16 @@ public final class Health extends JavaPlugin implements Listener {
             } else
                 player.setHealth(NowHealth);
         }
+    }
+
+    //玩家死亡
+    @EventHandler
+    public void onPlayerDeath(PlayerSpawnLocationEvent event){
+        Player player= event.getPlayer();
+        double MaxHealth=Health.config.getDouble("最大玩家血量");
+        player.setMaxHealth(MaxHealth);
+        //设置血量
+        player.setHealth(MaxHealth);
     }
 
     public TimerTask loadHealthTask() {
