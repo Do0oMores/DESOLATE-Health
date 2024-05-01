@@ -15,6 +15,11 @@ public class HealthCommand implements CommandExecutor {
             return true;
         }
         Player player=(Player) commandSender;
+        //判断是否为op
+        if (!player.isOp()){
+            player.sendMessage("你没有使用该命令的权限!");
+            return true;
+        }
         //从配置文件读取最大玩家血量
         double MaxHealth=Health.config.getDouble("最大玩家血量");
         player.setMaxHealth(MaxHealth);

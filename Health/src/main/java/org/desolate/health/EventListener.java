@@ -1,7 +1,6 @@
 package org.desolate.health;
 
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,8 +26,18 @@ public class EventListener implements Listener {
     //玩家切换世界
     @EventHandler
     public void onPlayerChangeWorld(PlayerChangedWorldEvent event){
-        World world= event.getFrom();
-        setPlayerHealth(event);
+        Player player=event.getPlayer();
+        double health=Health.config.getDouble("最大玩家血量");
+        if (Health.config.contains("最大玩家血量")){
+            if (health>0.0){
+                player.setMaxHealth(health);
+                player.setHealth(health);
+            }else {
+                Health.config.set("最大玩家血量",100.0);
+                player.setMaxHealth(100.0);
+                player.sendMessage(ChatColor.RED+"血量需为正数，已将血量重置为100");
+            }
+        }
     }
 
     //玩家死亡
@@ -47,10 +56,6 @@ public class EventListener implements Listener {
         Player player = event.getPlayer();
         double health = Health.config.getDouble("最大玩家血量");
         //重置超出阈值的玩家血量 (更正--重复判断)
-        //if (player.getHealth()>health){
-        //    player.setHealth(health);
-        //    player.sendMessage(ChatColor.RED+"你的血量已超出阈值，现已重置");
-        //}
         if (Health.config.contains("最大玩家血量")) {
             if (health > 0.0) {
                 player.setMaxHealth(health);
