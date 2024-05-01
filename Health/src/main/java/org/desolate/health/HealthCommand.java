@@ -6,7 +6,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class HealthCommand implements CommandExecutor {
-
+    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         //判断为玩家输入
