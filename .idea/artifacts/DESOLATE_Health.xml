@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="jar" build-on-make="true" name="DESOLATE-Health">
-    <output-path>$PROJECT_DIR$/out/artifacts/DESOLATE_Health</output-path>
-    <root id="archive" name="DESOLATE-Health.jar">
-      <element id="module-output" name="Health" />
-    </root>
-  </artifact>
-</component>
