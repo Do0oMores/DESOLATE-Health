@@ -9,15 +9,13 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Objects;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public final class Health extends JavaPlugin {
     public static FileConfiguration config;
     EventListener eventListener = new EventListener();
 
+    //插件加载
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(eventListener, this);
@@ -34,6 +32,7 @@ public final class Health extends JavaPlugin {
         savePlayerHealth();
     }
 
+    //加载配置文件
     private void loadConfig() {
         File configFile = new File(getDataFolder(), "config.yml");
         if (!configFile.exists()) {
@@ -47,6 +46,7 @@ public final class Health extends JavaPlugin {
         }
     }
 
+    //保存玩家血量
     private void savePlayerHealth() {
         for (Player player : Bukkit.getOnlinePlayers()) {
             config.set(player.getUniqueId().toString(), player.getHealth());
@@ -58,18 +58,34 @@ public final class Health extends JavaPlugin {
         }
     }
 
+    //回血机制，在指定的世界关闭回血机制
     public TimerTask loadHealthTask() {
         return new TimerTask() {
             @Override
             public void run() {
                 Collection<? extends Player> onlinePlayer = getServer().getOnlinePlayers();
                 for (Player player : onlinePlayer) {
-                    double health = player.getHealth();
-                    config.set(player.getUniqueId().toString(), health);
-                    PotionEffect heal = new PotionEffect(PotionEffectType.REGENERATION, 100, 2, false, false);
-                    player.addPotionEffect(heal);
+                    boolean onPlayerWorld=checkPlayerWorld(player);
+                    if (onPlayerWorld){
+                        double health = player.getHealth();
+                        config.set(player.getUniqueId().toString(), health);
+                        PotionEffect heal = new PotionEffect(PotionEffectType.REGENERATION, 100, 2, false, false);
+                        player.addPotionEffect(heal);
+                    }
                 }
             }
         };
+    }
+
+    //检查玩家所在世界
+    public boolean checkPlayerWorld(Player player){
+        List<String> worldName=config.getStringList("disabledWord");
+        String playerWorld=player.getWorld().getName();
+        for (String list:worldName){
+            if (playerWorld.equals(list)){
+                return false;
+            }
+        }
+        return true;
     }
 }
