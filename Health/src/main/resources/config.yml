@@ -1,4 +1,4 @@
 最大玩家血量: 100.0
-disabledWord:
-  - exampleWorldName
+在以下世界不启用:
+  - ExampleWorldName
 

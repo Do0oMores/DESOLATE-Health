@@ -79,7 +79,7 @@ public final class Health extends JavaPlugin {
 
     //检查玩家所在世界
     public boolean checkPlayerWorld(Player player){
-        List<String> worldName=config.getStringList("disabledWord");
+        List<String> worldName=config.getStringList("在以下世界不启用");
         String playerWorld=player.getWorld().getName();
         for (String list:worldName){
             if (playerWorld.equals(list)){
