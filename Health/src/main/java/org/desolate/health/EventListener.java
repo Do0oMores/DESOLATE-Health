@@ -1,14 +1,12 @@
 package org.desolate.health;
 
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.spigotmc.event.player.PlayerSpawnLocationEvent;
+import org.bukkit.event.player.*;
 
 public class EventListener implements Listener {
     @EventHandler
@@ -43,7 +41,7 @@ public class EventListener implements Listener {
     //玩家死亡
     @SuppressWarnings("deprecation")
     @EventHandler
-    public void onPlayerDeath(PlayerSpawnLocationEvent event) {
+    public void onPlayerDeath(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         double MaxHealth = Health.config.getDouble("默认最大玩家血量");
         player.setMaxHealth(MaxHealth);
@@ -76,6 +74,19 @@ public class EventListener implements Listener {
                 player.sendMessage(ChatColor.RED + "你的血量已超出阈值，现已重置");
             } else
                 player.setHealth(NowHealth);
+        }
+    }
+
+    //新API:attribute
+    private void CustomReWorld(Player player) {
+        String PlayerWorldName = player.getWorld().getName();
+        if (Health.config.contains("自定义世界血量." + PlayerWorldName)) {
+            double health = Health.config.getDouble("自定义世界血量." + PlayerWorldName, 100.0);
+            AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            if (maxHealth != null) {
+                maxHealth.setBaseValue(health);
+                player.setHealth(health);
+            }
         }
     }
 }
