@@ -4,6 +4,6 @@ main: org.desolate.health.Health
 api-version: 1.16
 author: Mores
 commands:
-  sethealth:
+  rehealth:
     description: "手动设置玩家的最大血量"
-    usage: /sethealth
+    usage: /rehealth

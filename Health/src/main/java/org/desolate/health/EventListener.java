@@ -25,17 +25,17 @@ public class EventListener implements Listener {
 
     //玩家切换世界
     @EventHandler
-    public void onPlayerChangeWorld(PlayerChangedWorldEvent event){
-        Player player=event.getPlayer();
-        double health=Health.config.getDouble("最大玩家血量");
-        if (Health.config.contains("最大玩家血量")){
-            if (health>0.0){
+    public void onPlayerChangeWorld(PlayerChangedWorldEvent event) {
+        Player player = event.getPlayer();
+        double health = Health.config.getDouble("默认最大玩家血量");
+        if (Health.config.contains("默认最大玩家血量")) {
+            if (health > 0.0) {
                 player.setMaxHealth(health);
                 player.setHealth(health);
-            }else {
-                Health.config.set("最大玩家血量",100.0);
+            } else {
+                Health.config.set("默认最大玩家血量", 100.0);
                 player.setMaxHealth(100.0);
-                player.sendMessage(ChatColor.RED+"血量需为正数，已将血量重置为100");
+                player.sendMessage(ChatColor.RED + "血量需为正数，已将血量重置为100");
             }
         }
     }
@@ -43,9 +43,9 @@ public class EventListener implements Listener {
     //玩家死亡
     @SuppressWarnings("deprecation")
     @EventHandler
-    public void onPlayerDeath(PlayerSpawnLocationEvent event){
-        Player player= event.getPlayer();
-        double MaxHealth=Health.config.getDouble("最大玩家血量");
+    public void onPlayerDeath(PlayerSpawnLocationEvent event) {
+        Player player = event.getPlayer();
+        double MaxHealth = Health.config.getDouble("默认最大玩家血量");
         player.setMaxHealth(MaxHealth);
         //设置血量
         player.setHealth(MaxHealth);
@@ -54,13 +54,13 @@ public class EventListener implements Listener {
     @SuppressWarnings("deprecation")
     public void setPlayerHealth(PlayerEvent event) {
         Player player = event.getPlayer();
-        double health = Health.config.getDouble("最大玩家血量");
+        double health = Health.config.getDouble("默认最大玩家血量");
         //重置超出阈值的玩家血量 (更正--重复判断)
-        if (Health.config.contains("最大玩家血量")) {
+        if (Health.config.contains("默认最大玩家血量")) {
             if (health > 0.0) {
                 player.setMaxHealth(health);
             } else {
-                Health.config.set("最大玩家血量", 100.0);
+                Health.config.set("默认最大玩家血量", 100.0);
                 player.setMaxHealth(100);// 设置最大血量为60
                 player.sendMessage(ChatColor.RED + "血量需为正数，已将血量重置为100");
             }

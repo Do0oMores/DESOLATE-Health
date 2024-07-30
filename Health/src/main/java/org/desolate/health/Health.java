@@ -21,10 +21,10 @@ public final class Health extends JavaPlugin {
         getServer().getPluginManager().registerEvents(eventListener, this);
         loadConfig();
         getLogger().info("DESOLATE-Health has been enabled!");
-        Timer timer=new Timer();
-        timer.schedule(loadHealthTask(),2000L,10000L);
+        Timer timer = new Timer();
+        timer.schedule(loadHealthTask(), 2000L, 10000L);
         //注册命令
-        Objects.requireNonNull(this.getCommand("sethealth")).setExecutor(new HealthCommand());
+        Objects.requireNonNull(this.getCommand("rehealth")).setExecutor(new HealthCommand());
     }
 
     @Override
@@ -65,8 +65,8 @@ public final class Health extends JavaPlugin {
             public void run() {
                 Collection<? extends Player> onlinePlayer = getServer().getOnlinePlayers();
                 for (Player player : onlinePlayer) {
-                    boolean onPlayerWorld=checkPlayerWorld(player);
-                    if (onPlayerWorld){
+                    boolean onPlayerWorld = checkPlayerWorld(player);
+                    if (onPlayerWorld) {
                         double health = player.getHealth();
                         config.set(player.getUniqueId().toString(), health);
                         PotionEffect heal = new PotionEffect(PotionEffectType.REGENERATION, 100, 2, false, false);
@@ -78,11 +78,11 @@ public final class Health extends JavaPlugin {
     }
 
     //检查玩家所在世界
-    public boolean checkPlayerWorld(Player player){
-        List<String> worldName=config.getStringList("在以下世界不启用");
-        String playerWorld=player.getWorld().getName();
-        for (String list:worldName){
-            if (playerWorld.equals(list)){
+    public boolean checkPlayerWorld(Player player) {
+        List<String> worldName = config.getStringList("在以下世界不启用回血机制");
+        String playerWorld = player.getWorld().getName();
+        for (String list : worldName) {
+            if (playerWorld.equals(list)) {
                 return false;
             }
         }
