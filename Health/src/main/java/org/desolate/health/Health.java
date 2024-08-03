@@ -13,7 +13,7 @@ import java.util.*;
 
 public final class Health extends JavaPlugin {
     public static FileConfiguration config;
-    EventListener eventListener = new EventListener();
+    EventListener eventListener = new EventListener(this);
 
     //插件加载
     @Override
