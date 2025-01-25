@@ -23,7 +23,12 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        HealthMade(player);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                HealthMade(player);
+            }
+        }.runTaskLater(plugin, 100L);
     }
 
     @EventHandler
