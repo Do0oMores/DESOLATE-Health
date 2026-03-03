@@ -2,27 +2,29 @@ package org.desolate.health;
 
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class EventListener implements Listener {
 
-    JavaPlugin plugin;
+    private final Health plugin;
 
-    public EventListener(JavaPlugin plugin) {
+    public EventListener(Health plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        plugin.resetRegenDelay(player);
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -36,6 +38,7 @@ public class EventListener implements Listener {
         Player player = event.getPlayer();
         // 记录玩家血量到配置文件
         Health.config.set(player.getUniqueId().toString(), player.getHealth());
+        plugin.clearRegenState(player);
     }
 
     //玩家切换世界
@@ -49,12 +52,26 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
+        plugin.resetRegenDelay(player);
         new BukkitRunnable() {
             @Override
             public void run() {
                 HealthMade(player);
             }
         }.runTaskLater(plugin, 20L);
+    }
+
+    @EventHandler
+    public void onPlayerDamage(EntityDamageEvent event) {
+        Entity entity = event.getEntity();
+        if (!(entity instanceof Player)) {
+            return;
+        }
+        if (event.getFinalDamage() <= 0) {
+            return;
+        }
+        Player player = (Player) entity;
+        plugin.resetRegenDelay(player);
     }
 
     //新API:attribute
